@@ -58,5 +58,4 @@ function [estimate_velocity, stored_velocity] = RunLaurens( t, input_angvel, inp
         estimate_velocity(i,2:4) = VelocityEstimate( tinteg(i), u, params )';
     end
     stored_velocity = [tinteg, full_states(:,10:12)];
-    keyboard;
 end

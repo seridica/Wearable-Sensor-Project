@@ -6,13 +6,13 @@
 % Code for doing frequency analysis on IMU data from various events of
 % interest. Contains functions for a number of separate analyses.
 
-function ImpactFrequencyAnalysis( input_data, t_start, t_end, linacc_thresh, wrange, imppre, imppost )
+function ImpactFrequencyAnalysis( input_data, t_start, t_end, linacc_thresh, wrange, imppre, imppost, lin_ind, ang_ind )
 
     % Close plots
     close all;
 
-    r = [0.05; -0.03; -0.08];
-    %r = [0; 0; 0;];
+    %r = [0.05; -0.03; -0.08];
+    r = [0; 0; 0;];
     
     % Full data pull
     t_full = input_data.t;
@@ -34,7 +34,12 @@ function ImpactFrequencyAnalysis( input_data, t_start, t_end, linacc_thresh, wra
     end
     
     % Find event indices
-    event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
+    %event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
+    if lin_ind ~= 0
+        event_inds = FindPeaks( t_full, -linacc_fullfilt(:,lin_ind), t_start, t_end, linacc_thresh, wrange );
+    else
+        event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
+    end
     unique_inds = unique( event_inds );
     
     % Plots of traces
@@ -48,29 +53,36 @@ function ImpactFrequencyAnalysis( input_data, t_start, t_end, linacc_thresh, wra
     angacc_impacts = HelpPlotEventTraces(dt, angacc_fullfilt, unique_inds, imppre, imppost);
     
     % Wavelet transforms
-%     figure(4); clf; hold on;
-%     EventAllWavelets( Fs, linacc_impacts );
-%     
-%     figure(5); clf; hold on;
-%     EventAllWavelets( Fs, angvel_impacts );
-%     
-%     figure(6); clf; hold on;
-%     EventAllWavelets( Fs, angacc_impacts );
+    figure(4); clf; hold on;
+    EventAllWavelets( Fs, linacc_impacts );
+    
+    figure(5); clf; hold on;
+    EventAllWavelets( Fs, angvel_impacts );
+    
+    figure(6); clf; hold on;
+    EventAllWavelets( Fs, angacc_impacts );
     
     % Attenuation
-%     freqs = [150, 100, 60, 30, 10. 5];
-%     figure(7); clf; hold on;
-%     AttenuationPlot( linacc_fullfilt(:,2), Fs, freqs, unique_inds, imppre, imppost );
-%     
-%     figure(8); clf; hold on;
-%     AttenuationPlot( angvel_fullfilt(:,1), Fs, freqs, unique_inds, imppre, imppost );
-%     
-%     figure(9); clf; hold on;
-%     AttenuationPlot( angacc_fullfilt(:,1), Fs, freqs, unique_inds, imppre, imppost );
+    freqs = [150, 100, 60, 30, 10. 5];
+    figure(7); clf; hold on;
+    AttenuationPlot( linacc_fullfilt(:,lin_ind), Fs, freqs, unique_inds, imppre, imppost );
     
-    % Try Laurens Model (noiseless)
+    figure(8); clf; hold on;
+    AttenuationPlot( angvel_fullfilt(:,ang_ind), Fs, freqs, unique_inds, imppre, imppost );
+    
+    figure(9); clf; hold on;
+    AttenuationPlot( angacc_fullfilt(:,ang_ind), Fs, freqs, unique_inds, imppre, imppost );
+    
+    % Normal FFT
     figure(10); clf; hold on;
-    HelpLaurens( dt, angvel_fullfilt, angacc_fullfilt, linacc_fullfilt, unique_inds, imppre, imppost );
+    HelperPlotFft( t_full, linacc_fullfilt(:,lin_ind), t_start, t_end, 150 );
+    
+    figure(11); clf; hold on;
+    HelperPlotFft( t_full, angvel_fullfilt(:,ang_ind), t_start, t_end, 150 );
+    
+    figure(12); clf; hold on;
+    HelperPlotFft( t_full, angacc_fullfilt(:,ang_ind), t_start, t_end, 150 );
+    %HelpLaurens( dt, angvel_fullfilt, angacc_fullfilt, linacc_fullfilt, unique_inds, imppre, imppost );
     %HelpLaurensFull( t_full, angvel_fullfilt, angacc_fullfilt, linacc_fullfilt, t_start, t_end );
 end
 

@@ -64,7 +64,7 @@ function impact = process_UBC()
             
             % Raw data converted
             accelToG = 0.098 / 2; % 0.098 for 200g range, 0.098/2 for 100g range
-            gyroToDegPerSec = 0.07 * 500/2000; % V3
+            gyroToDegPerSec = 0.07; % V3
             Data.lin_acc = current_impact.lin_acceleration * accelToG;
             Data.ang_vel = current_impact.rot_velocity * gyroToDegPerSec * pi/180;
             
