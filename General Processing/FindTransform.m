@@ -11,8 +11,17 @@
 % Returns transform containing rotation from lab frame to sensor frame 
 % defined as above, and the translation from lab frame origin to point 1.
 
-function transform_matrix = FindTransform( p1, p2, p3 )
-    x_axis_long = p2 - p1;
+function transform_matrix = FindTransform( p1, p2, p3, mode )
+
+    if nargin == 3
+        mode = 1;
+    end
+    
+    if mode == 1
+        x_axis_long = p2 - p1;
+    else
+        x_axis_long = p1 - p2;
+    end
     x_axis = x_axis_long / norm( x_axis_long );
     
     y_axis_temp_long = p3 - p1;
@@ -25,7 +34,13 @@ function transform_matrix = FindTransform( p1, p2, p3 )
     y_axis = y_axis_long / norm( y_axis_long );
     
     transform_matrix = eye(4);
-    transform_matrix(1:3,4) = p1;
+    
+    if mode == 1
+        transform_matrix(1:3,4) = p1;
+    else
+        transform_matrix(1:3,4) = p3;
+    end
+    
     transform_matrix(1:3,1) = x_axis;
     transform_matrix(1:3,2) = y_axis;
     transform_matrix(1:3,3) = z_axis;

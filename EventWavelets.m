@@ -16,7 +16,7 @@ function maxabs = EventWavelets( Fs, event_signals, peak_percent, crange )
     surface( 'XData',t,'YData',f,...
          'CData',reshape( mean(signal_cfs')', nCols, nRows), 'ZData', zeros(nCols,nRows), ...
          'CDataMapping','scaled', 'FaceColor','texturemap', 'EdgeColor', 'none');
-    ylim([5,100]);
+    ylim([0,5]);
     colorbar();
     if (nargin > 3)
         caxis(crange)

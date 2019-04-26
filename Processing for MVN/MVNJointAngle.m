@@ -15,7 +15,7 @@ function [jointNames, jointData] = MVNJointAngle(mvnStruct)
     for i=1:numJoints
         
         % Get current sensor name
-        currName = mvnStruct.mvnx.subject.segments.segment{i}.Attributes;
+        currName = mvnStruct.mvnx.subject.joints.joint{i}.Attributes;
         jointNames = [jointNames, currName];
     end
     

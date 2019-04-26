@@ -24,22 +24,27 @@ function ImpactFrequencyAnalysis( input_data, t_start, t_end, linacc_thresh, wra
     Fs = 1/dt;
     
     % Filter
-    [b,a] = butter( 2, 190 / (Fs/2) );
-    angvel_fullfilt = filtfilt( b, a, angvel_fullraw );
+%     [b,a] = butter( 2, 190 / (Fs/2) );
+%     angvel_fullfilt = filtfilt( b, a, angvel_fullraw );
+%     angacc_fullfilt = dt_order_4_or_five_point_stencil( t_full, angvel_fullfilt' )';
+%     linacc_fullraw = filtfilt( b, a, linacc_fullraw );
+%     linacc_fullfilt = zeros( size( linacc_fullraw ) );
+%     for j=1:length( t_full )
+%         linacc_fullfilt(j,:) = ( linacc_fullraw(j,:)'*9.81 + cross( angacc_fullfilt(j,:)', r ) + cross( angvel_fullfilt(j,:)', cross( angvel_fullfilt(j,:)', r ) ) )' / 9.81;
+%     end
+%   
+
+    angvel_fullfilt = angvel_fullraw;
     angacc_fullfilt = dt_order_4_or_five_point_stencil( t_full, angvel_fullfilt' )';
-    linacc_fullraw = filtfilt( b, a, linacc_fullraw );
-    linacc_fullfilt = zeros( size( linacc_fullraw ) );
-    for j=1:length( t_full )
-        linacc_fullfilt(j,:) = ( linacc_fullraw(j,:)'*9.81 + cross( angacc_fullfilt(j,:)', r ) + cross( angvel_fullfilt(j,:)', cross( angvel_fullfilt(j,:)', r ) ) )' / 9.81;
-    end
-    
+    linacc_fullfilt = linacc_fullraw;
+
     % Find event indices
-    %event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
-    if lin_ind ~= 0
-        event_inds = FindPeaks( t_full, -linacc_fullfilt(:,lin_ind), t_start, t_end, linacc_thresh, wrange );
-    else
-        event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
-    end
+    event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
+    %if lin_ind ~= 0
+    %    event_inds = FindPeaks( t_full, -linacc_fullfilt(:,lin_ind), t_start, t_end, linacc_thresh, wrange );
+    %else
+    %    event_inds = FindPeaks( t_full, linacc_fullfilt, t_start, t_end, linacc_thresh, wrange );
+    %end
     unique_inds = unique( event_inds );
     
     % Plots of traces

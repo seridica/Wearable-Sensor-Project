@@ -23,7 +23,7 @@ function [segmentNames, segmentData] = MVNSegment(mvnStruct)
     nFrames = length( mvnStruct.mvnx.subject.frames.frame );
     
     % Fill sensor data matrix
-    segmentData = zeros(nFrames-3, (numSegments*6)+1);
+    segmentData = zeros(nFrames-3, (numSegments*7)+1);
     for i=4:nFrames
         % Time
         segmentData(i-3,1) = str2double( mvnStruct.mvnx.subject.frames.frame{i}.Attributes.time ) / 1000.0;
@@ -34,12 +34,13 @@ function [segmentNames, segmentData] = MVNSegment(mvnStruct)
         
         % Sensors
         for j=1:numSegments
-            segmentData(i-3,(j-1)*6+1+1) = str2double( segmentOrientation{(j-1)*3+1} );
-            segmentData(i-3,(j-1)*6+2+1) = str2double( segmentOrientation{(j-1)*3+2} );
-            segmentData(i-3,(j-1)*6+3+1) = str2double( segmentOrientation{(j-1)*3+3} );
-            segmentData(i-3,(j-1)*6+4+1) = str2double( segmentPosition{(j-1)*3+1} );
-            segmentData(i-3,(j-1)*6+5+1) = str2double( segmentPosition{(j-1)*3+2} );
-            segmentData(i-3,(j-1)*6+6+1) = str2double( segmentPosition{(j-1)*3+3} );
+            segmentData(i-3,(j-1)*7+1+1) = str2double( segmentOrientation{(j-1)*4+1} );
+            segmentData(i-3,(j-1)*7+2+1) = str2double( segmentOrientation{(j-1)*4+2} );
+            segmentData(i-3,(j-1)*7+3+1) = str2double( segmentOrientation{(j-1)*4+3} );
+            segmentData(i-3,(j-1)*7+4+1) = str2double( segmentOrientation{(j-1)*4+4} );
+            segmentData(i-3,(j-1)*7+5+1) = str2double( segmentPosition{(j-1)*3+1} );
+            segmentData(i-3,(j-1)*7+6+1) = str2double( segmentPosition{(j-1)*3+2} );
+            segmentData(i-3,(j-1)*7+7+1) = str2double( segmentPosition{(j-1)*3+3} );
         end
     end
 end
